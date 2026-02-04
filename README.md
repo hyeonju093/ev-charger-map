@@ -1,73 +1,26 @@
-# React + TypeScript + Vite
+# EV map - 내 주변 전기차 충전소 찾기
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+공공데이터 포털(한전 API)와 브이월드(Vworld) API를 연동해 서울 시내 전기차 충전소 위치를 지도에 시각화하는 React 프로젝트입니다.
 
-Currently, two official plugins are available:
+## 주요 기능
+* **실시간 충전소 데이터 로드**: 한국전력공사의 Open API를 통해 서울시 충전소 정보를 가져옵니다.
+* **주소 기반 좌표 변환**: 주소 문자열을 브이월드 Geocoder API를 사용하여 위/경도 좌표로 정밀 변환합니다.
+* **마커 클러스터링**: 충전소가 밀집된 지역을 클러스터로 묶어 지도의 가독성을 높였습니다. (Leaflet.markercluster 활용)
+* **상세 정보 팝업**: 마커 클릭 시 충전소 명칭, 상세 주소, 급속/완속 충전기 대수를 확인할 수 있습니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 기술 스택
+* **Frontend**: React, TypeScript, Vite
+* **Map Library**: Leaflet, Leaflet.markercluster
+* **Styling**: Tailwind CSS
+* **API**: 
+  - KEPCO (한국전력공사 전기차 충전소 정보)
+  - Vworld (국가공간정보 플랫폼 주소변환 서비스)
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 현재 진행 상황 및 이슈
+현재 프로젝트는 개발 진행 중이며, API 연동 과정에서 발생한 기술적 문제들을 해결해 나가는 단계입니다.
+* 1. CORS 및 API 프록시 이슈
+  - 문제 : 브라우저에서 한전 및 브이월드 API를 직접 호출 했을 때 보안 정책으로 인해 데이터 접근이 차단됨.
+  - 해결 : vite.config.ts의 proxy 설정을 통해 클라이언트 요청을 서버 측에서 전달하는 방식으로 우회하여 해결.
+* 2. 주소 좌표 변환 실패 (해결 중)
+  - 문제 : 한전 데이터의 주소 형식이 다양하여 브이월드 API에서 404 에러가 자주 발생함.
+  - 해결 과정 : road(도로명)과 parcel(지번)을 순차적으로 호출하도록 로직 개선 단계
