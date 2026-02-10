@@ -28,7 +28,7 @@ ev-charger-map/
 ```
 
 ### [Preview]
-<img src="./main-screen-img.jpg" />
+<img src="./src/assets/main-screen-img.jpg" />
 
 
 ### [Issue]
